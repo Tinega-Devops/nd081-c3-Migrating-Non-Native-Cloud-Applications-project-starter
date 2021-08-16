@@ -2,7 +2,7 @@ from app import app, db, queue_client
 from datetime import datetime
 from app.models import Attendee, Conference, Notification
 from flask import render_template, session, request, redirect, url_for, flash, make_response, session
-from azure.servicebus import Message
+from azure.servicebus import QueueClient, Message
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import logging
@@ -64,28 +64,33 @@ def notification():
         notification.submitted_date = datetime.utcnow()
 
         try:
+            # add notification
             db.session.add(notification)
             db.session.commit()
 
-            ##################################################
-            ## TODO: Refactor This logic into an Azure Function
-            ## Code below will be replaced by a message queue
-            #################################################
-            attendees = Attendee.query.all()
+            print('New notification added successfully with message: {} and subject: {}'.format(
+                request.form['message'], request.form['subject']
+            ))
 
-            for attendee in attendees:
-                subject = '{}: {}'.format(attendee.first_name, notification.subject)
-                send_email(attendee.email, subject, notification.message)
+            # set notification id
+            notification_id = notification.id
 
-            notification.completed_date = datetime.utcnow()
-            notification.status = 'Notified {} attendees'.format(len(attendees))
-            db.session.commit()
-            # TODO Call servicebus queue_client to enqueue notification ID
+            print('Enqueueing notification_id: {} to queue: {}'.format(
+                notification_id, app.config.get('SERVICE_BUS_QUEUE_NAME')))
 
-            #################################################
-            ## END of TODO
-            #################################################
+            # create queue client
+            sb_queue_client = QueueClient.from_connection_string(app.config.get('SERVICE_BUS_CONNECTION_STRING'), app.config.get('SERVICE_BUS_QUEUE_NAME'))
 
+            # create message
+            msg = Message(str(notification_id))
+            
+            # send message
+            sb_queue_client.send(msg)   
+
+            print('notification_id: {} enqueued to queue: {}'.format(
+                notification_id, app.config.get('SERVICE_BUS_QUEUE_NAME')))
+
+            # redirect to notifications
             return redirect('/Notifications')
         except :
             logging.error('log unable to save notification')
@@ -96,7 +101,7 @@ def notification():
 
 
 def send_email(email, subject, body):
-    if not app.config.get('SENDGRID_API_KEY')
+    if not app.config.get('SENDGRID_API_KEY'):
         message = Mail(
             from_email=app.config.get('ADMIN_EMAIL_ADDRESS'),
             to_emails=email,
