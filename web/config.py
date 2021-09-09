@@ -4,9 +4,9 @@ app_dir = os.path.abspath(os.path.dirname(__file__))
 
 class BaseConfig:
     DEBUG = True
-    POSTGRES_URL="migration-db-server.postgres.database.azure.com"  #TODO: Update value
-    POSTGRES_USER="azureuser@migration-db-server" #TODO: Update value
-    POSTGRES_PW="betaa123#"   #TODO: Update value
+    POSTGRES_URL="techconfserver.postgres.database.azure.com"  #TODO: Update value
+    POSTGRES_USER="azureUser@techconfserver" #TODO: Update value
+    POSTGRES_PW="@tga136yut"   #TODO: Update value
     POSTGRES_DB="techconfdb"   #TODO: Update value
     DB_URL = 'postgresql://{user}:{pw}@{url}/{db}'.format(user=POSTGRES_USER,pw=POSTGRES_PW,url=POSTGRES_URL,db=POSTGRES_DB)
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI') or DB_URL
@@ -14,7 +14,7 @@ class BaseConfig:
     SECRET_KEY = 'LWd2tzlprdGHCIPHTd4tp5SBFgDszm'
     SERVICE_BUS_CONNECTION_STRING ='Endpoint=sb://migrationsb.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=uqcdVDeL7eYi2Nh57WQscwQaxMiolAx1Ly/sqbW0UBs=' #TODO: Update value
     SERVICE_BUS_QUEUE_NAME ='notificationqueue'
-    ADMIN_EMAIL_ADDRESS: 'info@techconf.com'
+    ADMIN_EMAIL_ADDRESS: 'oncharijohannes@gmail.com'
     SENDGRID_API_KEY = '' #Configuration not required, required SendGrid Account
 
 class DevelopmentConfig(BaseConfig):

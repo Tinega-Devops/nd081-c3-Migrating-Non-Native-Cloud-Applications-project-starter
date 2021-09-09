@@ -63,10 +63,10 @@ Complete a month cost analysis of each Azure resource to give an estimate total 
 
 | Azure Resource | Service Tier | Monthly Cost |
 | ------------ | ------------ | ------------ |
-| *Azure Postgres Database* | Basic    | $25.32             |
-| *Azure Service Bus*   | Basic        | $0.01             |
-| *Azure App Service*   | F1        | Free             |
-| *Azure Storage*   | Basic        | $0.10             |
+| *Azure Postgres Database* | General Purpose    | $138.47            |
+| *Azure Service Bus*   | Basic        | $$0.00            |
+| *Azure App Service*   | Basic B1        | $219.00            |
+| *Azure Storage*   | General Purpose v2        | $21.84             |
 
 Azure Postgres Database includes 1vCore, 5GB Storage and 7 days backup retention period.
 
